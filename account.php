@@ -1,0 +1,14 @@
+<?php require 'inc/bootstrap.php';need();
+if($_SERVER['REQUEST_METHOD']==='POST'){chk();$u=q('SELECT * FROM users WHERE id=?',[me()['id']])->fetch();$n=$_POST['n']??'';
+ if(($_POST['a']??'')==='rc'){if($u['role']==='cpd'&&password_verify($_POST['o']??'',$u['pass_hash'])){$_SESSION['rc']=recSet($u['id']);audit('recovery_code_created');}else flash('Current password is wrong.',1);go('account.php');}
+ if(!password_verify($_POST['o']??'',$u['pass_hash']))flash('Current password is wrong.',1);
+ elseif($n===($_POST['o']??''))flash('Choose a new password that is different from the current one.',1);
+ elseif(!strong($n)||$n!==($_POST['n2']??''))flash('New password needs 8+ characters with letters and numbers, and must match the confirmation.',1);
+ else{q('UPDATE users SET pass_hash=?,must_change=0 WHERE id=?',[password_hash($n,PASSWORD_DEFAULT),$u['id']]);$_SESSION['u']['must_change']=0;audit('password_changed');flash('Password changed.');go('dashboard.php');}
+ go('account.php');}
+top('My account');$rc=$_SESSION['rc']??null;unset($_SESSION['rc']);$hasrc=me()['role']==='cpd'?!q('SELECT recovery_hash IS NULL FROM users WHERE id=?',[me()['id']])->fetchColumn():false;?><div class="card" style="max-width:420px"><h1>Change password</h1><p class="mu"><?=h(me()['name'])?> - <?=h(ROLES[me()['role']])?></p><?php if(me()['must_change'])echo '<p class="mu">Please set your own password before continuing.</p>';?>
+<form method="post"><input type="hidden" name="t" value="<?=csrf()?>"><label>Current password</label><input type="password" name="o" required autocomplete="current-password"><label>New password (8+ characters, letters and numbers)</label><input type="password" name="n" required data-strength autocomplete="new-password"><label>Confirm new password</label><input type="password" name="n2" required autocomplete="new-password"><br><br><button>Save</button></form></div>
+<?php if(me()['role']==='cpd'):?><div class="card" style="max-width:420px"><h2>Recovery code</h2>
+<?php if($rc):?><div class="ok">New recovery code created. It is shown only once.</div><p style="font-size:20px;font-weight:700;letter-spacing:1px;text-align:center;background:var(--bg);padding:10px;border-radius:6px"><?=h($rc)?></p><div class="row np"><button class="s" onclick="window.print()">Print</button></div>
+<?php else:?><p class="mu"><?=$hasrc?'A recovery code is set. Creating a new one makes the old one stop working.':'You have no recovery code yet. Create one so you can recover your password if you forget it.'?> Use it on the <a href="forgot.php">Forgot password</a> page.</p>
+<form method="post"><input type="hidden" name="t" value="<?=csrf()?>"><input type="hidden" name="a" value="rc"><label>Current password</label><input type="password" name="o" required autocomplete="current-password"><br><button class="s"><?=$hasrc?'Create a new recovery code':'Create recovery code'?></button></form><?php endif;?></div><?php endif;bot();

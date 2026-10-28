@@ -1,0 +1,9 @@
+# Never upload secrets or live data to GitHub
+config.local.php
+storage/installed.lock
+storage/logo.*
+storage/uploads/*
+!storage/uploads/.keep
+*.sql
+*.zip
+.DS_Store

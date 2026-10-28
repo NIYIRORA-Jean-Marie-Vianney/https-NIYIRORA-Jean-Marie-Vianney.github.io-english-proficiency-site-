@@ -1,0 +1,4 @@
+<?php require 'inc/bootstrap.php';need('cpd');$a=$_GET['a']??'';$acts=q('SELECT DISTINCT action FROM audit ORDER BY action')->fetchAll(PDO::FETCH_COLUMN);
+$rows=q('SELECT * FROM audit '.($a?'WHERE action=? ':'').'ORDER BY id DESC LIMIT 300',$a?[$a]:[])->fetchAll();top('Audit log');?>
+<h1>Audit log <span class="mu">- last 300 events</span></h1><div class="card np"><form method="get"><select name="a" onchange="this.form.submit()"><option value="">All actions</option><?php foreach($acts as $x)echo '<option'.($a===$x?' selected':'').'>'.h($x).'</option>';?></select></form></div>
+<div class="card sc"><table><tr><th>When</th><th>Who</th><th>Action</th><th>Detail</th><th>IP</th></tr><?php foreach($rows as $r)echo '<tr><td>'.h($r['ts']).'</td><td>'.h($r['user_name']).'</td><td>'.h($r['action']).'</td><td>'.h($r['detail']).'</td><td class="mu">'.h($r['ip']).'</td></tr>';?></table></div><?php bot();

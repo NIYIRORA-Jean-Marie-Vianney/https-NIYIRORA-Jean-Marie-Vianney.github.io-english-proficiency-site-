@@ -1,0 +1,6 @@
+# Blocks direct web access to private files. Safe on XAMPP and on Apache web hosts.
+<IfModule mod_authz_core.c>
+<FilesMatch "^(config\.local\.php|config\.local\.sample\.php|README\.md|README\.txt|\.gitignore)$|\.(sql|md|yml|log|zip)$">
+Require all denied
+</FilesMatch>
+</IfModule>

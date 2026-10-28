@@ -1,0 +1,16 @@
+<?php require 'inc/bootstrap.php';need();$u=me();$mgr=$u['role']!=='teacher';$T=terms();$pp=50;
+$f=['from'=>$_GET['from']??$T[1][0],'to'=>$_GET['to']??$T[3][1],'type'=>$_GET['type']??'','cls'=>trim($_GET['cls']??''),'q'=>trim($_GET['q']??''),'status'=>$_GET['status']??'','skill'=>$_GET['skill']??'','uid'=>$mgr?(int)($_GET['uid']??0):$u['id']];
+$all=reports($f);$pg=max(1,(int)($_GET['page']??1));$rows=array_slice($all,($pg-1)*$pp,$pp);$np=max(1,ceil(count($all)/$pp));
+$qs=http_build_query(array_filter($_GET,fn($v,$k)=>$k!=='page'&&$v!=='',ARRAY_FILTER_USE_BOTH));
+top('Reports');?><h1><?=$mgr?'All reports':'My reports'?> (<?=count($all)?>)</h1>
+<div class="card np"><form method="get"><div class="g"><div><label>From</label><input type="date" name="from" value="<?=h($f['from'])?>"></div><div><label>To</label><input type="date" name="to" value="<?=h($f['to'])?>"></div>
+<?php if($mgr):?><div><label>Teacher</label><select name="uid"><option value="">All</option><?php foreach(q("SELECT id,name FROM users WHERE role IN('teacher','cpd') ORDER BY name") as $x)echo "<option value=\"{$x['id']}\"".($f['uid']==$x['id']?' selected':'').'>'.h($x['name']).'</option>';?></select></div><?php endif;?>
+<div><label>Activity type</label><select name="type"><option value="">All</option><?php foreach(TYPES as $t)echo '<option'.($f['type']===$t?' selected':'').'>'.h($t).'</option>';?></select></div>
+<div><label>Skill</label><select name="skill"><option value="">All</option><?php foreach(SKILLS as $t)echo '<option'.($f['skill']===$t?' selected':'').'>'.h($t).'</option>';?></select></div>
+<div><label>Status</label><select name="status"><option value="">All</option><?php foreach(STATUS as $k=>$v)echo '<option value="'.$k.'"'.($f['status']===$k?' selected':'').'>'.h($v).'</option>';?></select></div>
+<div><label>Class</label><input name="cls" list="cl" value="<?=h($f['cls'])?>"><datalist id="cl"><?php foreach(classNames() as $x)echo '<option value="'.h($x).'">';?></datalist></div><div><label>Search</label><input name="q" value="<?=h($f['q'])?>"></div></div>
+<div class="row"><button>Filter</button><a class="btn s" href="reports.php">Reset</a><?php if($mgr){$ex=http_build_query(['p'=>'custom','from'=>$f['from'],'to'=>$f['to'],'uid'=>$f['uid'],'cls'=>$f['cls'],'type'=>$f['type'],'status'=>$f['status'],'skill'=>$f['skill'],'q'=>$f['q']]);echo '<a class="btn s" href="export.php?fmt=pdf&'.h($ex).'">PDF of these results</a><a class="btn s" href="export.php?fmt=csv&'.h($ex).'">CSV</a>';}?></div></form></div>
+<?php $cs=array_count_values(array_column(reports(['status'=>'']+$f),'status'));$tot=array_sum($cs);$cq=http_build_query(array_filter(array_diff_key($_GET,['status'=>1,'page'=>1]),fn($v)=>$v!==''));?>
+<div class="chips np"><?php foreach([''=>'All']+STATUS as $k=>$v)echo '<a class="'.($f['status']===$k?'on':'').'" href="?'.h($cq.($k!==''?($cq?'&':'').'status='.$k:'')).'">'.h($v).'<small>'.($k===''?$tot:($cs[$k]??0)).'</small></a>';?></div>
+<div class="card"><?php rtable($rows,'reports.php'.($qs?'?'.$qs:''));?>
+<?php if($np>1){echo '<div class="row np">';for($i=1;$i<=$np;$i++)echo '<a class="btn '.($i===$pg?'on':'s').'" href="?'.h($qs).'&page='.$i.'">'.$i.'</a>';echo '</div>';}?></div><?php bot();
