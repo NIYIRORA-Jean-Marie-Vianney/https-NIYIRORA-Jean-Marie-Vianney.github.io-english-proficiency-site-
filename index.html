@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>English Proficiency Management System</title>
+<meta name="description" content="Record, review and report English-language activities across the school.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2312263f'/%3E%3Ctext x='16' y='23' font-size='20' font-family='Georgia' font-weight='bold' text-anchor='middle' fill='white'%3EE%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#f6f4ef; --card:#ffffff; --text:#1a2433; --muted:#5b6778; --line:#e0dccf;
+  --navy:#12263f; --accent:#0b5ed7; --accent-ink:#ffffff; --warm:#c8553d; --ok:#18793a;
+  --hero-from:#12263f; --hero-to:#1d3a5f;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0e1621; --card:#152233; --text:#e8edf4; --muted:#9fb0c5; --line:#26364b;
+    --navy:#0a121c; --accent:#5b9bff; --accent-ink:#0a121c; --warm:#ff8a70; --ok:#58c47a;
+    --hero-from:#0a121c; --hero-to:#15283f;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);
+  font:16px/1.6 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.wrap{max-width:1020px;margin:0 auto;padding:0 20px}
+
+/* hero */
+header.hero{background:linear-gradient(160deg,var(--hero-from),var(--hero-to));color:#fff;padding:56px 0 64px}
+.badge{display:inline-block;font-size:13px;letter-spacing:.04em;text-transform:uppercase;
+  border:1px solid rgba(255,255,255,.35);border-radius:99px;padding:3px 12px;margin-bottom:18px;color:#d6e4f7}
+h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(30px,5.2vw,50px);line-height:1.12;margin:0 0 14px;font-weight:700}
+.lead{font-size:clamp(16px,2.2vw,19px);max-width:640px;color:#d6e4f7;margin:0 0 26px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.btn{display:inline-block;font:inherit;font-weight:600;text-decoration:none;border-radius:8px;padding:12px 22px;border:2px solid transparent;cursor:pointer}
+.btn.main{background:#fff;color:#12263f}
+.btn.main:hover{background:#e8f0fe}
+.btn.ghost{border-color:rgba(255,255,255,.5);color:#fff}
+.btn.ghost:hover{background:rgba(255,255,255,.12)}
+.btn[aria-disabled="true"]{opacity:.55;pointer-events:none}
+#hint{margin:14px 0 0;font-size:14px;color:#ffd9b0}
+
+/* sections */
+section{padding:46px 0 6px}
+h2{font-family:Georgia,"Times New Roman",serif;font-size:clamp(22px,3.4vw,30px);margin:0 0 6px}
+.sub{color:var(--muted);margin:0 0 22px;max-width:640px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px}
+.card h3{font-size:16px;margin:0 0 6px}
+.card p{margin:0;color:var(--muted);font-size:15px}
+.tag{display:inline-block;font-size:12px;font-weight:700;color:var(--warm);margin-bottom:6px;letter-spacing:.04em;text-transform:uppercase}
+
+.roles .card{border-top:4px solid var(--accent)}
+.roles .card:nth-child(2){border-top-color:var(--ok)}
+.roles .card:nth-child(3){border-top-color:var(--warm)}
+
+ol.steps{counter-reset:s;list-style:none;margin:0;padding:0;display:grid;gap:12px}
+ol.steps li{counter-increment:s;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px 14px 56px;position:relative}
+ol.steps li:before{content:counter(s);position:absolute;left:14px;top:12px;width:30px;height:30px;border-radius:50%;
+  background:var(--navy);color:#fff;font-weight:700;display:grid;place-items:center}
+@media (prefers-color-scheme: dark){ol.steps li:before{background:var(--accent);color:var(--accent-ink)}}
+ol.steps b{display:block}
+ol.steps span{color:var(--muted);font-size:15px}
+
+.note{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--warm);border-radius:10px;padding:14px 16px;margin-top:22px;color:var(--muted);font-size:15px}
+.note b{color:var(--text)}
+footer{margin-top:50px;border-top:1px solid var(--line);padding:22px 0 34px;color:var(--muted);font-size:14px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="badge">Version 2.3</span>
+    <h1>English Proficiency<br>Management System</h1>
+    <p class="lead">One place for teachers and school leaders to record English-language activities, review them, and produce weekly, termly and annual reports.</p>
+    <div class="cta">
+      <a id="open" class="btn main" href="#" rel="noopener">Open the system</a>
+      <a class="btn ghost" href="#features">See what it does</a>
+    </div>
+    <p id="hint" hidden></p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="roles" class="roles">
+    <h2>Built around how a school works</h2>
+    <p class="sub">Each person sees only what their role needs.</p>
+    <div class="grid">
+      <div class="card"><span class="tag">Teachers</span><h3>Report and follow up</h3><p>See the classes assigned to you, submit activity reports with photos or documents, and read feedback when a report is approved or rejected.</p></div>
+      <div class="card"><span class="tag">Headteacher &amp; Deputy</span><h3>Review with confidence</h3><p>Approve or reject reports one by one or in bulk, always with a reason for rejections, and watch which classes and teachers are active.</p></div>
+      <div class="card"><span class="tag">CPD Coordinator</span><h3>Run the programme</h3><p>Register classes, assign them to teachers, manage accounts, and generate PDF or Excel reports for any period.</p></div>
+    </div>
+  </section>
+
+  <section id="features">
+    <h2>What’s in version 2.3</h2>
+    <p class="sub">Everything below is part of the system you open with the button above.</p>
+    <div class="grid">
+      <div class="card"><h3>Approve or reject</h3><p>Buttons on every pending report, tick-box bulk actions, a full review history, and teachers notified instantly.</p></div>
+      <div class="card"><h3>Classes and assignments</h3><p>The CPD Coordinator registers classes with enrolment and assigns them to teachers, with an optional subject.</p></div>
+      <div class="card"><h3>Class coverage</h3><p>The dashboard shows classes and teachers with no report in the chosen week, term or year.</p></div>
+      <div class="card"><h3>Safe sign-in</h3><p>Show/Hide password, Caps Lock warning, strength meter, and lock-outs after repeated wrong attempts.</p></div>
+      <div class="card"><h3>CPD registration and recovery</h3><p>A CPD Coordinator can register using the school’s exact name (new registrations are approved by an existing CPD Coordinator) and recover a forgotten password with a one-time recovery code.</p></div>
+      <div class="card"><h3>Reports and records</h3><p>PDF and CSV exports, an audit log of important actions, and one-click database backups.</p></div>
+      <div class="card"><h3>Works on any device</h3><p>Phones, tablets and laptops, once the system is published online over https.</p></div>
+      <div class="card"><h3>In-app notifications</h3><p>A bell with a counter tells people when a report needs review, or when a class has been assigned to them.</p></div>
+    </div>
+  </section>
+
+  <section id="start">
+    <h2>Getting started</h2>
+    <p class="sub">For a new user on a phone or computer.</p>
+    <ol class="steps">
+      <li><b>Open the system</b><span>Use the “Open the system” button at the top of this page. Always use the secure https link.</span></li>
+      <li><b>Sign in</b><span>Use the username and temporary password given to you by the CPD Coordinator, then choose your own password.</span></li>
+      <li><b>Forgot your password?</b><span>Teachers, Headteacher and Deputy ask the CPD Coordinator for a reset. CPD Coordinators use their recovery code.</span></li>
+    </ol>
+    <div class="note"><b>About this page.</b> This is only a project page. The system itself runs on a PHP and MySQL web host, and all school data stays there, not on GitHub.</div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">English Proficiency Management System, version 2.3.</div>
+</footer>
+
+<script>
+  /* ============ EDIT THIS ONE LINE ============
+     Put the address of your live system here (the page where people sign in), for example:
+     "https://yourschool.example.com/login.php"                                           */
+  var LIVE_URL = "https://your-domain.example/login.php";
+  /* ============================================ */
+
+  (function () {
+    var btn = document.getElementById("open");
+    var hint = document.getElementById("hint");
+    var placeholder = LIVE_URL.indexOf("your-domain.example") !== -1;
+    if (placeholder) {
+      btn.setAttribute("aria-disabled", "true");
+      btn.removeAttribute("href");
+      hint.hidden = false;
+      hint.textContent = "Setup needed: open this file and replace the LIVE_URL address near the bottom with your live system’s sign-in link.";
+    } else {
+      btn.href = LIVE_URL;
+    }
+  })();
+</script>
+</body>
+</html>
